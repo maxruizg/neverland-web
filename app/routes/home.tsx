@@ -108,24 +108,16 @@ function Hero() {
                 </span>
               ))}
             </span>
-            <span className="flex items-center gap-4 md:gap-6">
-              <span className="relative inline-flex items-center justify-center">
-                <span className="absolute w-12 h-12 md:w-16 md:h-16 bg-accent-500/20 rounded-full animate-pulse-glow" />
-                <span className="relative text-accent-500 text-4xl md:text-5xl lg:text-6xl font-light animate-plus-spin">
-                  +
+            <span className="text-3xl md:text-5xl lg:text-6xl tracking-wider">
+              {"CONSULTANTS".split("").map((letter, i) => (
+                <span
+                  key={i}
+                  className="inline-block animate-letter-reveal opacity-0"
+                  style={{ animationDelay: `${0.8 + i * 0.04}s` }}
+                >
+                  {letter}
                 </span>
-              </span>
-              <span className="text-3xl md:text-5xl lg:text-6xl tracking-wider">
-                {"CONSULTANTS".split("").map((letter, i) => (
-                  <span
-                    key={i}
-                    className="inline-block animate-letter-reveal opacity-0"
-                    style={{ animationDelay: `${0.8 + i * 0.04}s` }}
-                  >
-                    {letter}
-                  </span>
-                ))}
-              </span>
+              ))}
             </span>
           </h1>
           <p className="text-accent-500 text-xl md:text-2xl font-light tracking-[0.3em] uppercase mb-8 animate-fade-in opacity-0" style={{ animationDelay: "1.5s", animationFillMode: "forwards" }}>
@@ -219,7 +211,7 @@ function About() {
             Empowering businesses to achieve their full potential
           </h2>
           <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-            At Neverland + Consultants, we specialize in accelerating business growth
+            At Neverland Consultants, we specialize in accelerating business growth
             and enhancing financial efficiency through expert leadership and customized solutions.
           </p>
         </div>

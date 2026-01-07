@@ -30,9 +30,9 @@ function Navigation() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <a href="#" className="text-xl font-bold text-primary-950">
-            NEVERLAND
+        <div className="flex justify-between items-center h-20">
+          <a href="#">
+            <img src="/logo-black.png" alt="Neverland Consultants" className="h-14" />
           </a>
           <div className="hidden md:flex items-center space-x-8">
             <a
@@ -96,27 +96,60 @@ function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up opacity-0" style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight">
-            NEVERLAND
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight flex flex-col items-center gap-2">
+            <span className="inline-block">
+              {"NEVERLAND".split("").map((letter, i) => (
+                <span
+                  key={i}
+                  className="inline-block animate-letter-reveal opacity-0"
+                  style={{ animationDelay: `${0.3 + i * 0.05}s` }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </span>
+            <span className="flex items-center gap-4 md:gap-6">
+              <span className="relative inline-flex items-center justify-center">
+                <span className="absolute w-12 h-12 md:w-16 md:h-16 bg-accent-500/20 rounded-full animate-pulse-glow" />
+                <span className="relative text-accent-500 text-4xl md:text-5xl lg:text-6xl font-light animate-plus-spin">
+                  +
+                </span>
+              </span>
+              <span className="text-3xl md:text-5xl lg:text-6xl tracking-wider">
+                {"CONSULTANTS".split("").map((letter, i) => (
+                  <span
+                    key={i}
+                    className="inline-block animate-letter-reveal opacity-0"
+                    style={{ animationDelay: `${0.8 + i * 0.04}s` }}
+                  >
+                    {letter}
+                  </span>
+                ))}
+              </span>
+            </span>
           </h1>
-          <p className="text-accent-500 text-xl md:text-2xl font-light tracking-[0.3em] uppercase mb-8">
+          <p className="text-accent-500 text-xl md:text-2xl font-light tracking-[0.3em] uppercase mb-8 animate-fade-in opacity-0" style={{ animationDelay: "1.5s", animationFillMode: "forwards" }}>
             Put to Flight
           </p>
         </div>
 
         <div
           className="animate-fade-in-up opacity-0"
-          style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}
+          style={{ animationDelay: "1.8s", animationFillMode: "forwards" }}
         >
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-            Boutique financial and commercial consulting firm specializing in
-            investment banking, headquartered in Mexico City.
-          </p>
+          <div className="max-w-3xl mx-auto mb-12">
+            <p className="text-white text-xl md:text-2xl font-light mb-4 leading-relaxed">
+              Integrated investment banking & strategic advisory.
+            </p>
+            <p className="text-accent-500 text-lg md:text-xl tracking-wide">
+              Independent <span className="mx-2 text-white/40">·</span> Client-Focused <span className="mx-2 text-white/40">·</span> Execution Driven
+            </p>
+          </div>
         </div>
 
         <div
           className="animate-fade-in-up opacity-0 flex flex-col sm:flex-row gap-4 justify-center"
-          style={{ animationDelay: "1s", animationFillMode: "forwards" }}
+          style={{ animationDelay: "2.1s", animationFillMode: "forwards" }}
         >
           <a
             href="#services"
@@ -154,28 +187,122 @@ function Hero() {
 }
 
 function About() {
+  const sectors = [
+    "Fintech",
+    "AI",
+    "Health",
+    "Tech-Enabled",
+    "Agro",
+    "Water",
+    "Energy",
+    "Infrastructure",
+  ];
+
+  const clients = [
+    { name: "Startups", icon: "M13 10V3L4 14h7v7l9-11h-7z" },
+    { name: "Corporations", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
+    { name: "Family Offices", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+    { name: "Angel Investors", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
+    { name: "PE Funds", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
+    { name: "Strategic Operators", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
+  ];
+
   return (
     <section id="about" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="text-accent-600 font-semibold text-sm tracking-wider uppercase">
+            About Us
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-950 mt-4 mb-6">
+            Empowering businesses to achieve their full potential
+          </h2>
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            At Neverland + Consultants, we specialize in accelerating business growth
+            and enhancing financial efficiency through expert leadership and customized solutions.
+          </p>
+        </div>
+
+        {/* Key Stats */}
+        <div className="grid md:grid-cols-2 gap-4 mb-12 max-w-3xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary-950 to-primary-800 rounded-xl p-5 text-center">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-accent-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="relative">
+              <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+                +$600<span className="text-accent-500">M</span>
+              </div>
+              <div className="text-accent-500 font-medium text-sm">Active Transactions (USD)</div>
+            </div>
+          </div>
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary-950 to-primary-800 rounded-xl p-5 text-center">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-accent-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="relative">
+              <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+                LATAM
+              </div>
+              <div className="text-accent-500 font-medium text-sm">Active Mandates Across the Region</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sectors */}
+        <div className="mb-10">
+          <h3 className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+            Sectors We Serve
+          </h3>
+          <div className="flex flex-wrap justify-center gap-2">
+            {sectors.map((sector) => (
+              <span
+                key={sector}
+                className="px-3 py-1.5 bg-primary-50 text-primary-700 rounded-full text-xs font-medium hover:bg-primary-100 transition-colors"
+              >
+                {sector}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Clients */}
+        <div className="bg-gray-50 rounded-xl p-6 md:p-8 mb-12">
+          <h3 className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider mb-5">
+            Who We Work With
+          </h3>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+            {clients.map((client) => (
+              <div
+                key={client.name}
+                className="flex flex-col items-center text-center group"
+              >
+                <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center mb-2 group-hover:shadow-md group-hover:scale-105 transition-all">
+                  <svg
+                    className="w-5 h-5 text-primary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d={client.icon}
+                    />
+                  </svg>
+                </div>
+                <span className="text-xs font-medium text-gray-700">{client.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Our Edge & Experience */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="text-accent-600 font-semibold text-sm tracking-wider uppercase">
-              About Us
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-950 mt-4 mb-6">
-              Empowering businesses to achieve their full potential
-            </h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              At Neverland Consultants, we specialize in accelerating business
-              growth and enhancing financial efficiency through expert leadership
-              and customized solutions.
-            </p>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
               Our team brings over <strong>35 years of combined expertise</strong> in
               financial consulting, working with private capital funds, investors,
               and strategic partners to deliver exceptional results.
             </p>
-
             <div className="grid grid-cols-2 gap-6">
               <div className="p-6 bg-primary-50 rounded-xl">
                 <div className="text-4xl font-bold text-primary-600 mb-2">35+</div>
@@ -296,15 +423,15 @@ function WhatWeDo() {
           Your trusted financial partner
         </h2>
         <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-16">
-          We work with startups, mid-sized enterprises, and large corporations,
-          providing tailored financial solutions that drive real results.
+          We work with startups, mid-sized enterprises, large corporations,
+          and investors to find <span className="font-semibold text-primary-700">bespoke opportunities</span> — providing tailored financial solutions that drive real results.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-5 mx-auto">
               <svg
-                className="w-7 h-7 text-primary-600"
+                className="w-6 h-6 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -317,17 +444,17 @@ function WhatWeDo() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-primary-950 mb-3">Startups</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-bold text-primary-950 mb-2 text-center">Startups</h3>
+            <p className="text-gray-600 text-sm text-center">
               Early-stage funding, valuation, and strategic planning to help you
               scale efficiently.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+          <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-5 mx-auto">
               <svg
-                className="w-7 h-7 text-primary-600"
+                className="w-6 h-6 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -340,18 +467,18 @@ function WhatWeDo() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-primary-950 mb-3">
+            <h3 className="text-lg font-bold text-primary-950 mb-2 text-center">
               Mid-Sized Enterprises
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm text-center">
               Growth capital, operational optimization, and M&A advisory services.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+          <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-5 mx-auto">
               <svg
-                className="w-7 h-7 text-primary-600"
+                className="w-6 h-6 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -364,12 +491,47 @@ function WhatWeDo() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-primary-950 mb-3">
+            <h3 className="text-lg font-bold text-primary-950 mb-2 text-center">
               Large Corporations
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm text-center">
               Complex transactions, cross-border deals, and strategic partnerships.
             </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-shadow border-2 border-accent-500/20">
+            <div className="w-12 h-12 bg-accent-500/10 rounded-xl flex items-center justify-center mb-5 mx-auto">
+              <svg
+                className="w-6 h-6 text-accent-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-primary-950 mb-3 text-center">
+              Project & Structured Finance
+            </h3>
+            <ul className="text-gray-600 text-sm space-y-1.5">
+              <li className="flex items-start gap-2">
+                <span className="text-accent-500 mt-1">•</span>
+                <span>Infrastructure + real assets</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-accent-500 mt-1">•</span>
+                <span>BOT + PPP frameworks</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-accent-500 mt-1">•</span>
+                <span>Offtake-based + contract cashflows</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -508,11 +670,13 @@ function Services() {
 }
 
 function Team() {
+  const luisYears = new Date().getFullYear() - 2016;
+
   const team = [
     {
       name: "Luis Martinez",
       role: "Co-Founder & Managing Director",
-      bio: "Economics and Applied Mathematics graduate from ITAM with 6+ years in financial consulting and IT. Holds a Master's in Finance and specializes in Machine Learning applications for financial modeling, credit risk assessment, and automated valuations.",
+      bio: `Economics and Applied Mathematics graduate from ITAM with ${luisYears}+ years in financial consulting and IT. Holds a Master's in Finance and specializes in Machine Learning applications for financial modeling, credit risk assessment, and automated valuations.`,
       initials: "LM",
     },
     {
@@ -721,9 +885,9 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
-            <div className="text-white text-xl font-bold mb-2">NEVERLAND</div>
+            <img src="/logo-white.png" alt="Neverland Consultants" className="h-14" />
             <div className="text-gray-400 text-sm">
-              Boutique Financial Consulting
+              Integrated Investment Banking
             </div>
           </div>
 

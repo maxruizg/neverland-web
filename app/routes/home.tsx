@@ -26,7 +26,7 @@ export async function action({ request }: Route.ActionArgs) {
     // Once domain is verified, change 'from' to your own domain
     const result = await resend.emails.send({
       from: "Neverland Contact Form <onboarding@resend.dev>",
-      // TODO: Change to luis.martinez@neverlandconsultants.capital after verifying domain
+      // TODO: Change to info@neverlandconsultants.capital after verifying domain
       to: "maxruizg@gmail.com",
       replyTo: email,
       subject: `New Contact Form Submission from ${firstName} ${lastName}`,
@@ -980,10 +980,10 @@ function Contact() {
                 <div>
                   <h4 className="font-semibold text-primary-950 mb-1">Email</h4>
                   <a
-                    href="mailto:luis.martinez@neverlandconsultants.capital"
+                    href="mailto:info@neverlandconsultants.capital"
                     className="text-primary-600 hover:text-primary-700"
                   >
-                    luis.martinez@neverlandconsultants.capital
+                    info@neverlandconsultants.capital
                   </a>
                 </div>
               </div>

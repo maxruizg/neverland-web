@@ -1,4 +1,58 @@
+import { Form, useActionData, useNavigation } from "react-router";
+import { Resend } from "resend";
 import type { Route } from "./+types/home";
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const email = formData.get("email") as string;
+  const company = formData.get("company") as string;
+  const message = formData.get("message") as string;
+
+  if (!firstName || !lastName || !email || !message) {
+    return { success: false, error: "Please fill in all required fields." };
+  }
+
+  try {
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      return { success: false, error: "Email service not configured." };
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // Test mode: emails appear in Resend dashboard, not actually delivered
+    // Once domain is verified, change 'from' to your own domain
+    const result = await resend.emails.send({
+      from: "Neverland Contact Form <onboarding@resend.dev>",
+      // TODO: Change to luis.martinez@neverlandconsultants.capital after verifying domain
+      to: "maxruizg@gmail.com",
+      replyTo: email,
+      subject: `New Contact Form Submission from ${firstName} ${lastName}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company:</strong> ${company || "Not provided"}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message.replace(/\n/g, "<br>")}</p>
+      `,
+    });
+
+    console.log("Resend result:", result);
+
+    if (result.error) {
+      console.error("Resend error:", result.error);
+      return { success: false, error: result.error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Email error:", error);
+    return { success: false, error: "Failed to send message. Please try again." };
+  }
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +71,9 @@ export default function Home() {
       <Navigation />
       <Hero />
       <About />
+      <GlobalPresence />
       <WhatWeDo />
+      <SectorShowcase />
       <Services />
       <Team />
       <Contact />
@@ -84,6 +140,16 @@ function Navigation() {
 function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0">
+        <img
+          src="/neverland-pics-landing/stock-chart.jpg"
+          alt=""
+          className="w-full h-full object-cover opacity-20"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-950/90 via-primary-900/85 to-primary-800/90" />
+      </div>
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -307,7 +373,21 @@ function About() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative hidden lg:block">
+            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src="/neverland-pics-landing/consulting.jpg"
+                alt="Business professionals discussing strategy"
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-accent-500 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-primary-950 font-bold text-2xl">35+</span>
+            </div>
+          </div>
+
+          <div className="relative lg:hidden">
             <div className="bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl p-1">
               <div className="bg-white rounded-xl p-8">
                 <h3 className="text-xl font-bold text-primary-950 mb-4">
@@ -397,6 +477,58 @@ function About() {
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GlobalPresence() {
+  return (
+    <section className="relative py-0 overflow-hidden">
+      <div className="grid md:grid-cols-2">
+        {/* Mexico City */}
+        <div className="relative group h-[400px] md:h-[500px]">
+          <img
+            src="/neverland-pics-landing/cdmx-angel.jpg"
+            alt="Mexico City skyline with Angel de la Independencia"
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-950/90 via-primary-950/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <span className="text-accent-500 text-sm font-semibold tracking-wider uppercase">
+              Headquarters
+            </span>
+            <h3 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-3">
+              Mexico City
+            </h3>
+            <p className="text-gray-300 text-lg max-w-md">
+              Our base in the heart of Latin America, connecting opportunities across the region.
+            </p>
+          </div>
+        </div>
+
+        {/* New York */}
+        <div className="relative group h-[400px] md:h-[500px]">
+          <img
+            src="/neverland-pics-landing/nyc-skyline.jpg"
+            alt="New York City skyline"
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-950/90 via-primary-950/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <span className="text-accent-500 text-sm font-semibold tracking-wider uppercase">
+              Global Network
+            </span>
+            <h3 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-3">
+              International Reach
+            </h3>
+            <p className="text-gray-300 text-lg max-w-md">
+              Strategic connections to global capital markets and investment opportunities.
+            </p>
           </div>
         </div>
       </div>
@@ -525,6 +657,64 @@ function WhatWeDo() {
               </li>
             </ul>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SectorShowcase() {
+  const sectors = [
+    {
+      image: "/neverland-pics-landing/renewable-energy.jpg",
+      title: "Energy",
+      description: "Renewable energy and sustainable infrastructure investments",
+    },
+    {
+      image: "/neverland-pics-landing/water-infrastructure.webp",
+      title: "Water & Infrastructure",
+      description: "Critical infrastructure and water treatment projects",
+    },
+    {
+      image: "/neverland-pics-landing/finance-network.jpg",
+      title: "Fintech & AI",
+      description: "Technology-driven financial solutions and innovation",
+    },
+  ];
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <span className="text-accent-600 font-semibold text-sm tracking-wider uppercase">
+            Industry Focus
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-primary-950 mt-4">
+            Sector Expertise
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {sectors.map((sector, index) => (
+            <div
+              key={index}
+              className="group relative h-[300px] rounded-2xl overflow-hidden cursor-pointer"
+            >
+              <img
+                src={sector.image}
+                alt={sector.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-950 via-primary-950/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                <h3 className="text-xl font-bold text-white mb-2">{sector.title}</h3>
+                <p className="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {sector.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -800,74 +990,107 @@ function Contact() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="text-xl font-bold text-primary-950 mb-6">
-              Send us a message
-            </h3>
-            <form className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
-                    placeholder="John"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
-                    placeholder="Doe"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
-                  placeholder="john@company.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Company
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
-                  placeholder="Your Company"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none outline-none"
-                  placeholder="Tell us about your project..."
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-primary-600 text-white py-4 rounded-lg font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
+          <ContactForm />
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactForm() {
+  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
+  return (
+    <div className="bg-white rounded-2xl p-8 shadow-lg">
+      <h3 className="text-xl font-bold text-primary-950 mb-6">
+        Send us a message
+      </h3>
+
+      {actionData?.success && (
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
+          Thank you for your message! We'll get back to you soon.
+        </div>
+      )}
+
+      {actionData?.error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {actionData.error}
+        </div>
+      )}
+
+      <Form method="post" className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              First Name *
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              required
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
+              placeholder="John"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Last Name *
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              required
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
+              placeholder="Doe"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Email *
+          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
+            placeholder="john@company.com"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Company
+          </label>
+          <input
+            type="text"
+            name="company"
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none"
+            placeholder="Your Company"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Message *
+          </label>
+          <textarea
+            name="message"
+            required
+            rows={4}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none outline-none"
+            placeholder="Tell us about your project..."
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-primary-600 text-white py-4 rounded-lg font-semibold hover:bg-primary-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Sending..." : "Send Message"}
+        </button>
+      </Form>
+    </div>
   );
 }
 
